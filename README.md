@@ -63,8 +63,8 @@ docker compose up --build
 │   ├── views/
 │   │   ├── layouts/
 │   │   │   └── _header.html.erb  # 共通ヘッダー
-│   │   └── home/
-│   │       └── index.html.erb    # トップページ
+│   │   └── static_pages/
+│   │       └── top.html.erb    # トップページ
 │   └── assets/
 │       └── stylesheets/
 │           └── application.tailwind.css
