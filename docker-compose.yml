@@ -1,25 +1,25 @@
 services:
   db:
-    image: mysql:8.0
+    image: postgres:15
     environment:
       TZ: Asia/Tokyo
-      MYSQL_ROOT_PASSWORD: password
+      POSTGRES_PASSWORD: password
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     ports:
-      - 3307:3306
+      - "5432:5432"
     healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -uroot -ppassword
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
-      timeout: 10s
+      timeout: 5s
       retries: 3
       start_period: 30s
 
   web:
     build:
       context: .
-      dockerfile: Dockerfile.dev
-    command: bash -c "bundle install && yarn install && bundle exec rails db:prepare && rm -f tmp/pids/server.pid && ./bin/dev"
+      dockerfile: Dockerfile
+    command: bash -c "cd /myapp && bundle install && npm install && bundle exec rails db:prepare && rm -f tmp/pids/server.pid && foreman start"
     tty: true
     stdin_open: true
     volumes:
@@ -36,6 +36,6 @@ services:
         condition: service_healthy
 
 volumes:
-  mysql_data:
+  postgres_data:
   bundle_data:
   node_modules:
